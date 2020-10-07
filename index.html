@@ -1,23 +1,233 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <link rel="stylesheet" href="bootstrap框架/css/bootstrap.css">
 </head>
+<style>
+    html,
+    body {
+        margin: 0;
+        padding: 0;
+   
+    }
+
+    body {
+         padding-bottom: 60px;
+        padding-top: 50px; 
+    }
+    dl {
+         float: left; 
+        margin: 30px;
+        width:300px;
+        height:500px;
+    }
+
+    img {
+        width: 300px;
+        height: 300px;
+
+    }
+
+    .form-control {
+        margin-left: 300px;
+    }
+
+    .nav-pills li {
+        margin: 0 200px;
+    }
+</style>
+
 <body>
+    <nav class="navbar navbar-default navbar-fixed-top">
+        <div class="container">
+            <form class="navbar-form navbar-left" role="search">
+                <div class="form-group">
+                    <input type="text" class="form-control" placeholder="请输入商品名称">
+                </div>
+                <button type="submit" class="btn btn-default">查找</button>
+                <input type="button" value="添加" class="plus">
+            </form>
+        </div>
+    </nav>
+    <div id="content">
+
+    </div>
+
+
+
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">×</span></button>
+                    <h4 class="modal-title" id="myModalLabel">添加商品</h4>
+                </div>
+                <div class="modal-body">
+
+                    <div class="form-group">
+                        <label for="txt_departmentname">商品名称</label>
+                        <input type="text" name="txt_departmentname" class="form-control" id="txt_departmentname"
+                            placeholder="商品名称">
+                    </div>
+                    <div class="form-group">
+                        <label for="txt_parentdepartment">商品价格</label>
+                        <input type="text" name="txt_parentdepartment" class="form-control" id="txt_parentdepartment"
+                            placeholder="商品价格">
+                    </div>
+                    <div class="form-group">
+                        <label for="txt_departmentlevel">商品路径</label>
+                        <input type="text" name="txt_departmentlevel" class="form-control" id="txt_departmentlevel"
+                            placeholder="商品图片路径">
+                    </div>
+                    <div class="form-group">
+                        <label for="txt_statu">描述</label>
+                        <input type="text" name="txt_statu" class="form-control" id="txt_statu" placeholder="形容">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal"><span
+                            class="glyphicon glyphicon-remove" aria-hidden="true"></span>关闭</button>
+                    <button type="button" id="btn_submit" class="btn btn-primary" data-dismiss="modal"><span
+                            class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span>保存</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+
+
+    <nav class="navbar navbar-default navbar-fixed-bottom">
+        <div class="container">
+
+            <ul class="nav nav-pills">
+                <li role="presentation" class="active"><a href="#">首页</a></li>
+                <li role="presentation"><a href="cart.html">购物车</a></li>
+                <li role="presentation"><a href="#">我的</a></li>
+            </ul>
+        </div>
+
+    </nav>
+    <script src="jquery.1.11.3.js"></script>
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-    <script>  
-    axios.get("http://localhost:3000/productDatas").then(function(data){
-       var data=data.data;
-       console.log(data)
-    });
-   // axios.post("http://localhost:3000/productDatas").then(f)
+    <script src="bootstrap框架/js/bootstrap.min.js"></script>
+    <script>
+        $(function () {
+       
+       
+           
 
-  // axios.put("http://localhost:3000/productDatas/2",{title:"shangPin"});
-  //  axios.patch("http://localhost:3000/productDatas/1"),{params:{price:1000}};
-  //axios.delete("http://localhost:3000/productDatas/2");
+          
+ function update(){
+    axios.get("http://localhost:3000/productDatas").then(function (data) {
+                var data = data.data;
+                console.log(data)
+                var str = "";
+                for (let i = 0; i < data.length; i++) { 
+                    str += `<dl><dt><img src="${data[i].imgsrc}" alt=""></dt><dd>${data[i].title}</dd><dd>${data[i].price}</dd>
+                        <input type="button" class="inputAll" data-id="${data[i].id}" value="加入购物车">
+                        </br><input type="button"value="删除" class="shanChu" data-id="${data[i].id}">
+                        </dl>
+                   `;
+                    // console.log(str);
+                    // <input type="button"value="-"><input type="text"value="1"><input type="button"value="+">
+                }
+                $('#content').html(str);
+                // console.log(str);
+            });
+}
 
+update();
+$(".shanChu").click(function(){
+    var id1 = $(this).data("id");
+    console.log($(this).data("id"));
+    // axios.delete("http://localhost:3000/productDatas",{"id":id1});
+update();
+})
+
+// axios.get("http://localhost:3000/cartData").then(function (data) {
+//                 var cartData = data.data;
+//                 console.log(cartData);
+//             }).then(function (cartData) {
+//                 if (cartData) {
+//                     var cartData = cartData;
+//                 } else {
+//                     var cartData = {};
+//                 }
+
+//                 $(".inputAll").click(function () {
+//                     var id = $(this).data("id");
+//                     console.log($(this).data("id"));
+
+//                     if (!cartData[id]) {
+//                         cartData[id] = 1;
+//                         console.log(cartData[id]);
+//                     } else {
+//                         cartData[id]++;
+//                     }
+
+//                     axios.patch("http://localhost:3000/cartData", {
+//                         id: cartData[id]
+
+//                     })
+//                 })
+
+
+
+//             })
+
+
+
+
+
+        $("#btn_add").click(function () {
+                $("#myModalLabel").text("新增");
+                // $('#myModal').modal();
+            });
+            $(".plus").click(function () {
+                $('#myModal').modal();    
+            })
+        $(".glyphicon-floppy-disk").click(function(){
+          
+            axios.post("http://localhost:3000/productDatas",{
+                title:$("#txt_parentdepartment").val(),
+                price:$("#txt_parentdepartment").val(),
+                imgsrc:$("#txt_departmentlevel").val(),
+                description:$("#txt_statu").val()
+            }).then(res=>{
+                console.log(res);
+            }).catch(err=>{
+                console.log(err);
+            })
+        })  
+        update();
+
+
+            
+
+
+
+           
+
+            // axios.post("http://localhost:3000/productDatas").then(f)
+
+            // axios.put("http://localhost:3000/productDatas/2",{title:"shangPin"});
+            //  axios.patch("http://localhost:3000/productDatas/1"),{params:{price:1000}};
+            //axios.delete("http://localhost:3000/productDatas/2");
+
+           
+
+
+        })
     </script>
 </body>
+
 </html>
